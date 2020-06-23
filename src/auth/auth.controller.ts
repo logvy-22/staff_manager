@@ -1,5 +1,12 @@
-import { Controller, Post, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  HttpStatus,
+  Response,
+} from '@nestjs/common';
 import { Body } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { UsersService } from '../users/users.service';
 import { CreateUserDTO } from '../users/interfaces/create-user.dto';
@@ -13,14 +20,18 @@ export class AuthController {
     private authService: AuthService,
   ) {}
 
+  @UseGuards(AuthGuard('local'))
   @Post('login')
   loginUser(@Body() body: LoginUserDTO) {
     return this.authService.login(body);
   }
 
   @Post('register')
-  @HttpCode(201)
-  registerUser(@Body() body: CreateUserDTO) {
-    this.authService.register(body);
+  async registerUser(@Response() res, @Body() body: CreateUserDTO) {
+    const result = await this.authService.register(body);
+    if (!result.success) {
+      return res.status(HttpStatus.BAD_REQUEST).json(result);
+    }
+    return res.status(HttpStatus.OK).json(result);
   }
 }

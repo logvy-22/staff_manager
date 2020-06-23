@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 
+import { User } from '../entities/user.entity';
 import { CreateUserDTO } from '../users/interfaces/create-user.dto';
 import { UsersService } from '../users/users.service';
-import { User } from '../users/user.entity';
 import { LoginUserDTO } from '../users/interfaces/login-user.dto';
+import { RegistrationStatus } from './interfaces/registrationStatus.interface'
 
 @Injectable()
 export class AuthService {
@@ -13,7 +13,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
-  private async validate(userData: LoginUserDTO): Promise<User | null> {
+  async validate(userData: LoginUserDTO): Promise<User | null> {
     const dbUser = await this.usersService.findByEmail(userData.email);
     if (dbUser && (await dbUser.comparePassword(userData.password))) {
       return dbUser;
@@ -22,7 +22,11 @@ export class AuthService {
     return null;
   }
 
-  public async login(
+  async validateUserToken(payload: { id: string }): Promise<User> {
+    return await this.usersService.findById(payload.id);
+  }
+
+  async login(
     user: LoginUserDTO,
   ): Promise<{ accessToken: string } | { status: number }> {
     const userData = await this.validate(user);
@@ -34,7 +38,16 @@ export class AuthService {
     return { accessToken };
   }
 
-  public async register(user: CreateUserDTO): Promise<void> {
-    return await this.usersService.create(user);
+  async register(user: CreateUserDTO): Promise<RegistrationStatus> {
+    let status: RegistrationStatus = {
+      success: true,
+      message: 'user register',
+    };
+    try {
+      await this.usersService.create(user);
+    } catch (err) {
+      status = { success: false, message: err };
+    }
+    return status;
   }
 }
