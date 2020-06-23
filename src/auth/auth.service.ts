@@ -27,14 +27,14 @@ export class AuthService {
 
   async login(
     user: LoginUserDTO,
-  ): Promise<{ accessToken: string } | { status: number }> {
+  ): Promise<{ accessToken: string; id: number } | { status: number }> {
     const userData = await this.validate(user);
     if (!userData) {
       return { status: 404 };
     }
     const accessToken = this.jwtService.sign({ id: userData.id });
 
-    return { accessToken };
+    return { accessToken, id: userData.id };
   }
 
   async register(user: CreateUserDTO) {

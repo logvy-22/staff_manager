@@ -4,7 +4,7 @@ import {
   UseGuards,
   Body,
   Param,
-  Put,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -30,7 +30,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() body: Partial<User>): Promise<User> {
     return this.usersService.updateUser(id, body);
   }

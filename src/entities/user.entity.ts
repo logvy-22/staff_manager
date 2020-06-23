@@ -5,7 +5,6 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   BeforeInsert,
-  BeforeUpdate,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
@@ -37,7 +36,7 @@ export class User extends BaseEntity {
   position: string;
 
   @Column({ type: 'bytea', nullable: true })
-  avatar: Buffer;
+  photo: Buffer;
 
   @Column({ type: 'boolean', default: false })
   isActive: boolean;
@@ -47,6 +46,9 @@ export class User extends BaseEntity {
 
   @Column({ type: 'varchar', length: 80 })
   password: string;
+
+  @Column({ type: 'point', srid: 4326, nullable: true })
+  location: string;
 
   @BeforeInsert()
   async hashPassword() {
