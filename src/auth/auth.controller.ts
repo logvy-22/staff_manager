@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Post,
-  UseGuards,
-  HttpStatus,
-  Response,
-} from '@nestjs/common';
+import { Controller, Post, UseGuards } from '@nestjs/common';
 import { Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -22,16 +16,14 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  loginUser(@Body() body: LoginUserDTO) {
+  loginUser(
+    @Body() body: LoginUserDTO,
+  ): Promise<{ accessToken: string } | { status: number }> {
     return this.authService.login(body);
   }
 
   @Post('register')
-  async registerUser(@Response() res, @Body() body: CreateUserDTO) {
-    const result = await this.authService.register(body);
-    if (!result.success) {
-      return res.status(HttpStatus.BAD_REQUEST).json(result);
-    }
-    return res.status(HttpStatus.OK).json(result);
+  registerUser(@Body() body: CreateUserDTO) {
+    return this.authService.register(body);
   }
 }

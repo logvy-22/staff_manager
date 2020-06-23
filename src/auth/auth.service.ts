@@ -5,7 +5,6 @@ import { User } from '../entities/user.entity';
 import { CreateUserDTO } from '../users/interfaces/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { LoginUserDTO } from '../users/interfaces/login-user.dto';
-import { RegistrationStatus } from './interfaces/registrationStatus.interface'
 
 @Injectable()
 export class AuthService {
@@ -38,16 +37,7 @@ export class AuthService {
     return { accessToken };
   }
 
-  async register(user: CreateUserDTO): Promise<RegistrationStatus> {
-    let status: RegistrationStatus = {
-      success: true,
-      message: 'user register',
-    };
-    try {
-      await this.usersService.create(user);
-    } catch (err) {
-      status = { success: false, message: err };
-    }
-    return status;
+  async register(user: CreateUserDTO) {
+    return await this.usersService.create(user);
   }
 }
