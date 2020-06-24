@@ -1,10 +1,20 @@
-import { Controller, Get, UseGuards, Body, Param, Delete, Put, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Body,
+  Param,
+  Delete,
+  Put,
+  Post,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { Vacation } from '../entities/vacation.entity';
 import { VacationsService } from './vacations.service';
 import { UpdateVacationDTO } from './interfaces/update-vacation.dto';
 import { CreateVacationDTO } from './interfaces/create-vacation.dto';
+import { VacationStatus } from '../constants/VacationStatus';
 
 @Controller('vacations')
 export class VacationsController {
@@ -42,7 +52,26 @@ export class VacationsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
-  update(@Param('id') id: string, @Body() body: UpdateVacationDTO): Promise<Vacation> {
+  update(
+    @Param('id') id: string,
+    @Body() body: UpdateVacationDTO,
+  ): Promise<Vacation> {
     return this.vacationsService.update(id, body);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':id/confirm')
+  confirmVacation(@Param('id') id: string): Promise<Vacation> {
+    return this.vacationsService.update(id, {
+      status: VacationStatus.confirmed,
+    });
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':id/decline')
+  declineVacation(@Param('id') id: string): Promise<Vacation> {
+    return this.vacationsService.update(id, {
+      status: VacationStatus.declined,
+    });
   }
 }

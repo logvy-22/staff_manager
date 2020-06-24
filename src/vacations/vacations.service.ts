@@ -15,7 +15,7 @@ export class VacationsService {
   ) {}
 
   getAll(): Promise<Vacation[]> {
-    return this.vacationRepository.find();
+    return this.vacationRepository.find({ relations: ['user'] });
   }
 
   async getByUserId(userId: string): Promise<Vacation[]> {
