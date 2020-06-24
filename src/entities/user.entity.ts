@@ -47,6 +47,9 @@ export class User extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   isBanned: boolean;
 
+  @Column({ type: 'boolean', default: false })
+  isAdmin: boolean;
+
   @Column({ type: 'varchar', length: 80 })
   password: string;
 
