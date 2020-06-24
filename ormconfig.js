@@ -9,7 +9,7 @@ module.exports = {
   "synchronize": false,
   "logging": false,
   "autoLoadEntities": true,
-  "migrations": ["migration/*.ts"],
+  "migrations": ["dist/migration/*.js"],
   "cli": {
     "migrationsDir": "migration"
   }
