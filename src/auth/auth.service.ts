@@ -5,6 +5,7 @@ import { User } from '../entities/user.entity';
 import { CreateUserDTO } from '../users/interfaces/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { LoginUserDTO } from '../users/interfaces/login-user.dto';
+import { JwtPayload } from './interfaces/JwtPayload';
 
 @Injectable()
 export class AuthService {
@@ -21,13 +22,13 @@ export class AuthService {
     return null;
   }
 
-  async validateUserToken(payload: { id: string }): Promise<User> {
+  async validateUserToken(payload: JwtPayload): Promise<User> {
     return await this.usersService.findById(payload.id);
   }
 
   async login(
     user: LoginUserDTO,
-  ): Promise<{ accessToken: string; id: number } | { status: number }> {
+  ): Promise<{ accessToken: string; id: string } | { status: number }> {
     const userData = await this.validate(user);
     if (!userData) {
       return { status: 404 };

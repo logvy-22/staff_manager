@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   BeforeInsert,
+  BeforeUpdate,
   OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -13,7 +14,7 @@ import { Vacation } from './vacation.entity';
 @Entity({ name: 'user' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ type: 'varchar', length: 80, unique: true })
   email: string;
@@ -53,6 +54,7 @@ export class User extends BaseEntity {
   location: string;
 
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }

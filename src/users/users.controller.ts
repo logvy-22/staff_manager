@@ -11,6 +11,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { User } from '../entities/user.entity';
 import { UpdatePasswordDTO } from './interfaces/update-password.dto';
+import { UpdateUserDTO } from './interfaces/update-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -31,7 +32,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: Partial<User>): Promise<User> {
+  update(@Param('id') id: string, @Body() body: UpdateUserDTO): Promise<User> {
     return this.usersService.updateUser(id, body);
   }
 

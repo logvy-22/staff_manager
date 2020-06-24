@@ -1,11 +1,11 @@
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
 
 import { User } from '../entities/user.entity';
 import { CreateUserDTO } from './interfaces/create-user.dto';
 import { UpdatePasswordDTO } from './interfaces/update-password.dto';
+import { UpdateUserDTO } from './interfaces/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -35,7 +35,7 @@ export class UsersService {
     return await this.userRepository.find();
   }
 
-  async updateUser(id: string, updatedUserData: Partial<User>): Promise<User> {
+  async updateUser(id: string, updatedUserData: UpdateUserDTO): Promise<User> {
     const user = await this.findById(id);
     return await this.userRepository.save({ ...user, ...updatedUserData });
   }
@@ -49,11 +49,8 @@ export class UsersService {
     if (!(await user.comparePassword(prevPassword))) {
       throw new HttpException('Incorrect prev password', HttpStatus.FORBIDDEN);
     }
-    const newHashPassword = await bcrypt.hash(nextPassword, 10);
+    user.password = nextPassword;
 
-    return await this.userRepository.save({
-      ...user,
-      password: newHashPassword,
-    });
+    return await this.userRepository.save(user);
   }
 }

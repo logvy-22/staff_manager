@@ -12,14 +12,8 @@ import { User } from './user.entity';
 
 @Entity({ name: 'vacation' })
 export class Vacation extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @ManyToOne(
-    () => User,
-    user => user.vacations,
-  )
-  user: User;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ default: VacationStatus.active })
   status: VacationStatus;
@@ -35,4 +29,10 @@ export class Vacation extends BaseEntity {
     default: () => 'CURRENT_TIMESTAMP',
   })
   endDate: Date;
+
+  @ManyToOne(
+    () => User,
+    user => user.vacations,
+  )
+  user: User;
 }
