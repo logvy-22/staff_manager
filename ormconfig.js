@@ -6,10 +6,10 @@ module.exports = {
   "password":  process.env.POSTGRES_PASSWORD,
   "database":  process.env.POSTGRES_DATABASE,
   "entities": ["dist/**/*.entity.js"],
-  "synchronize": true,
+  "synchronize": false,
   "logging": false,
   "autoLoadEntities": true,
-  "migrations": ["migration/*.js"],
+  "migrations": ["migration/*.ts"],
   "cli": {
     "migrationsDir": "migration"
   }

@@ -5,8 +5,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   BeforeInsert,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Vacation } from './vacation.entity';
 
 @Entity({ name: 'user' })
 export class User extends BaseEntity {
@@ -58,4 +60,10 @@ export class User extends BaseEntity {
   async comparePassword(attempt: string): Promise<boolean> {
     return await bcrypt.compare(attempt, this.password);
   }
+
+  @OneToMany(
+    () => Vacation,
+    vacation => vacation.user,
+  )
+  vacations: Vacation[];
 }
