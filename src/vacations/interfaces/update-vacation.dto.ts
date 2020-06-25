@@ -1,11 +1,11 @@
-import { IsOptional, IsEnum, IsDate } from 'class-validator';
+import { IsOptional, IsEnum, IsDateString } from 'class-validator';
 
 import { VacationStatus } from '../../constants/VacationStatus';
 
 export class UpdateVacationDTO {
-  @IsOptional() @IsDate() startDate?: Date;
+  @IsOptional() @IsDateString() startDate?: Date;
 
-  @IsOptional() @IsDate() endDate?: Date;
+  @IsOptional() @IsDateString() endDate?: Date;
 
   @IsOptional() @IsEnum(VacationStatus) status?: VacationStatus;
 }

@@ -1,9 +1,9 @@
-import { IsNotEmpty, IsUUID, IsDate } from 'class-validator';
+import { IsNotEmpty, IsUUID, IsDateString } from 'class-validator';
 
 export class CreateVacationDTO {
-  @IsNotEmpty() @IsDate() startDate: Date;
+  @IsNotEmpty() @IsDateString() startDate: Date;
 
-  @IsNotEmpty() @IsDate() endDate: Date;
+  @IsNotEmpty() @IsDateString() endDate: Date;
 
   @IsNotEmpty() @IsUUID() userId: string;
 }
