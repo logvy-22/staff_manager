@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { User } from '../entities/user.entity';
@@ -28,10 +28,10 @@ export class AuthService {
 
   async login(
     user: LoginUserDTO,
-  ): Promise<{ accessToken: string; id: string } | { status: number }> {
+  ): Promise<{ accessToken: string; id: string } | Error> {
     const userData = await this.validate(user);
     if (!userData) {
-      return { status: 404 };
+      throw new NotFoundException();
     }
     const accessToken = this.jwtService.sign({ id: userData.id });
 
