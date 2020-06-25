@@ -4,7 +4,7 @@ import {
   IsAlpha,
   ValidateNested,
   IsBase64,
-  isBoolean,
+  IsBoolean,
 } from 'class-validator';
 
 export class UpdateUserDTO {
@@ -22,9 +22,9 @@ export class UpdateUserDTO {
 
   @IsOptional() @ValidateNested() location?: string;
 
-  @IsOptional() @isBoolean() isActive?: boolean;
+  @IsOptional() @IsBoolean() isActive?: boolean;
 
-  @IsOptional() @isBoolean() isBanned?: boolean;
+  @IsOptional() @IsBoolean() isBanned?: boolean;
 
-  @IsOptional() @isBoolean() isAdmin?: boolean;
+  @IsOptional() @IsBoolean() isAdmin?: boolean;
 }

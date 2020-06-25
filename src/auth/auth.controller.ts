@@ -1,6 +1,5 @@
-import { Controller, Post, UseGuards } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { Body } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 
 import { UsersService } from '../users/users.service';
 import { CreateUserDTO } from '../users/interfaces/create-user.dto';
@@ -14,11 +13,10 @@ export class AuthController {
     private authService: AuthService,
   ) {}
 
-  @UseGuards(AuthGuard('local'))
   @Post('login')
   loginUser(
     @Body() body: LoginUserDTO,
-  ): Promise<{ accessToken: string } | { status: number }> {
+  ): Promise<{ accessToken: string; id: string } | Error> {
     return this.authService.login(body);
   }
 
