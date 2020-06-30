@@ -54,7 +54,7 @@ export class User extends BaseEntity {
   password: string;
 
   @Column({ type: 'point', srid: 4326, nullable: true })
-  location: string;
+  location: any;
 
   @BeforeInsert()
   @BeforeUpdate()
