@@ -2,7 +2,7 @@ import {
   IsEmail,
   IsOptional,
   IsAlpha,
-  ValidateNested,
+  IsString,
   IsBase64,
   IsBoolean,
 } from 'class-validator';
@@ -20,7 +20,7 @@ export class UpdateUserDTO {
 
   @IsOptional() @IsAlpha() position?: string;
 
-  @IsOptional() @ValidateNested() location?: string;
+  @IsOptional() @IsString() location?: string;
 
   @IsOptional() @IsBoolean() isActive?: boolean;
 
