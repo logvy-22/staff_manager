@@ -48,25 +48,16 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @Post(':id/make-active')
   async makeActive(@Param('id') id: string): Promise<any> {
-    return this.usersService.updateUser(id, { isActive: true });
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Post(':id/disable-active')
-  async disableActive(@Param('id') id: string): Promise<any> {
-    return this.usersService.updateUser(id, { isActive: false });
+    return this.usersService.updateUser(id, {
+      isActive: true,
+      isBanned: false,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post(':id/ban-user')
   async banUser(@Param('id') id: string): Promise<any> {
     return this.usersService.updateUser(id, { isBanned: true });
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Post(':id/remove-ban')
-  async removeBan(@Param('id') id: string): Promise<any> {
-    return this.usersService.updateUser(id, { isBanned: false });
   }
 
   @UseGuards(AuthGuard('jwt'))
