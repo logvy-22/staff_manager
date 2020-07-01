@@ -57,7 +57,10 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @Post(':id/ban-user')
   async banUser(@Param('id') id: string): Promise<any> {
-    return this.usersService.updateUser(id, { isBanned: true });
+    return this.usersService.updateUser(id, {
+      isBanned: true,
+      isActive: false,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
