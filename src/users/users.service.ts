@@ -37,7 +37,21 @@ export class UsersService {
 
   async updateUser(id: string, updatedUserData: UpdateUserDTO): Promise<User> {
     const user = await this.findById(id);
-    return await this.userRepository.save({ ...user, ...updatedUserData });
+    const { location } = user;
+
+    if (!updatedUserData.location && !user.location) {
+      return await this.userRepository.save({
+        ...user,
+        ...updatedUserData,
+      });
+    } else {
+      const newLocation = `(${location.x}, ${location.y})` as any;
+      const oldUserData = { ...user, location: newLocation };
+      return await this.userRepository.save({
+        ...oldUserData,
+        ...updatedUserData,
+      });
+    }
   }
 
   async changePassword(
