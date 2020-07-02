@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { VacationsModule } from './vacations/vacations.module';
 import { GalleryModule } from './gallery/gallery.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { GalleryModule } from './gallery/gallery.module';
     UsersModule,
     VacationsModule,
     GalleryModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

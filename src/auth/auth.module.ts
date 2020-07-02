@@ -25,7 +25,7 @@ dotenv.config();
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1m' },
+      signOptions: { expiresIn: '24h' },
     }),
   ],
   providers: [UsersService, AuthService, LocalStrategy, JwtStrategy],
