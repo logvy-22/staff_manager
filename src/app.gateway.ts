@@ -1,7 +1,6 @@
 import {
   SubscribeMessage,
   WebSocketGateway,
-  OnGatewayInit,
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -9,9 +8,10 @@ import {
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 
-@WebSocketGateway()
-export class AppGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+@WebSocketGateway(80)
+export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private users: { socket: Socket; id: string }[] = [];
+
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('AppGateway');
 
@@ -20,15 +20,18 @@ export class AppGateway
     this.server.emit('msgToClient', payload);
   }
 
-  afterInit(server: Server) {
-    this.logger.log('Init');
-  }
-
   handleDisconnect(client: Socket) {
+    const clientIndex = this.users.findIndex(
+      user => user.socket.id === client.id,
+    );
+    this.users.splice(clientIndex, 1);
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
   handleConnection(client: Socket, ...args: any[]) {
+    const userId = client.handshake.query.id;
+    this.users.push({ socket: client, id: userId });
     this.logger.log(`Client connected: ${client.id}`);
+    this.logger.log(args);
   }
 }
