@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Vacation } from './vacation.entity';
+import { Message } from './message.entity';
+import { Chat } from './chat.entity';
 
 @Entity({ name: 'user' })
 export class User extends BaseEntity {
@@ -71,4 +73,22 @@ export class User extends BaseEntity {
     vacation => vacation.user,
   )
   vacations: Vacation[];
+
+  @OneToMany(
+    () => Message,
+    message => message.user,
+  )
+  messages: Message[];
+
+  @OneToMany(
+    () => Chat,
+    chat => chat.firstUser,
+  )
+  firstChats: Chat[];
+
+  @OneToMany(
+    () => Chat,
+    chat => chat.secondUser,
+  )
+  secondChats: Chat[];
 }
