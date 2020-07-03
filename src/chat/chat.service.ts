@@ -8,6 +8,7 @@ import { Message } from '../entities/message.entity';
 import { CreateChatDTO } from './interfaces/create-chat.dto';
 import { UpdateChatMessageDTO } from './interfaces/update-chat-message.dto';
 import { CreateChatMessageDTO } from './interfaces/create-chat-message.dto';
+import { Pagination } from './interfaces/paginate-results.dto';
 
 @Injectable()
 export class ChatService {
@@ -61,13 +62,26 @@ export class ChatService {
     return this.chatRepository.delete({ id });
   }
 
-  getMessages(id: string): Promise<Message[]> {
-    return this.messageRepository.find({
+  async getMessages(
+    id: string,
+    { take = 30, skip = 0 }: { take: number; skip: number },
+  ): Promise<Pagination<Message[]>> {
+    const [result, total] = await this.messageRepository.findAndCount({
       relations: ['chat', 'user'],
       where: {
         chat: { id },
       },
+      order: {
+        createDate: 'DESC',
+      },
+      take: take,
+      skip: skip,
     });
+
+    return {
+      data: result,
+      count: total,
+    };
   }
 
   findMessageById(chatId: string, messageId: string): Promise<Message> {

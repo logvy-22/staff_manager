@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Req,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -17,6 +18,7 @@ import { ChatService } from './chat.service';
 import { CreateChatDTO } from './interfaces/create-chat.dto';
 import { UpdateChatMessageDTO } from './interfaces/update-chat-message.dto';
 import { CreateChatMessageDTO } from './interfaces/create-chat-message.dto';
+import { Pagination } from './interfaces/paginate-results.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -48,8 +50,12 @@ export class ChatController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id/message')
-  getMessages(@Param('id') id: string): Promise<Message[]> {
-    return this.chatService.getMessages(id);
+  getMessages(
+    @Param('id') id: string,
+    @Query('take') take: number,
+    @Query('skip') skip: number,
+  ): Promise<Pagination<Message[]>> {
+    return this.chatService.getMessages(id, { take, skip });
   }
 
   @UseGuards(AuthGuard('jwt'))
