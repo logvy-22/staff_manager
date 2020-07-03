@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -19,8 +19,10 @@ export class ChatService {
     private messageRepository: Repository<Message>,
   ) {}
 
+  private logger = new Logger(ChatService.name);
+
   getDialogs(userId: string): Promise<Chat[]> {
-    return this.chatRepository
+    const result = this.chatRepository
       .createQueryBuilder('chat')
       .where('chat.firstUser = :userId OR chat.secondUser = :userId', {
         userId,
@@ -28,11 +30,11 @@ export class ChatService {
       .leftJoinAndSelect('chat.firstUser', 'firstUser')
       .leftJoinAndSelect('chat.secondUser', 'secondUser')
       .leftJoinAndSelect('chat.messages', 'messages')
-      .where('messages.chat = chat.id')
-      .orderBy({ 'messages.createDate': 'DESC' })
-      .limit(1)
-      .leftJoinAndSelect('messages.user', 'user')
-      .getMany();
+      .leftJoinAndSelect('messages.user', 'user');
+
+    this.logger.log(result.getQuery());
+
+    return result.getMany();
   }
 
   async findById(id: string): Promise<Chat> {
@@ -46,8 +48,10 @@ export class ChatService {
     const { secondUser } = chatDTO;
     const chat = new Chat();
 
+    chat.createDate = new Date();
     chat.firstUser = await User.findOne(id);
     chat.secondUser = await User.findOne(secondUser);
+    chat.messages = [];
 
     return await this.chatRepository.save(chat);
   }
