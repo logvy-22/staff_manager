@@ -25,6 +25,8 @@ export class ChatService {
       .where('chat.firstUser = :userId OR chat.secondUser = :userId', {
         userId,
       })
+      .leftJoinAndSelect('chat.firstUser', 'firstUser')
+      .leftJoinAndSelect('chat.secondUser', 'secondUser')
       .leftJoinAndSelect('chat.messages', 'messages')
       .where('messages.chat = chat.id')
       .orderBy({ 'messages.createDate': 'DESC' })
