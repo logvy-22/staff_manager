@@ -30,8 +30,9 @@ export class ChatService {
       .leftJoinAndSelect('chat.firstUser', 'firstUser')
       .leftJoinAndSelect('chat.secondUser', 'secondUser')
       .leftJoinAndSelect('chat.messages', 'messages')
+      .orderBy({ 'messages.createDate': 'DESC' })
+      //.limit(1)
       .leftJoinAndSelect('messages.user', 'user');
-
     this.logger.log(result.getQuery());
 
     return result.getMany();
